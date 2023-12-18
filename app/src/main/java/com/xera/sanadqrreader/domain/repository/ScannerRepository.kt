@@ -7,9 +7,9 @@ interface ScannerRepository {
 
     fun startScanning () : Flow<String?>
 
-    suspend fun saveScannedQrCode(qrCode: String)
+    suspend fun saveScannedQrCode(qrCode: String,getInTime:String)
 
-    suspend fun updateQrCodeState(qrCode: String, status: String)
+    suspend fun updateQrCodeState(qrCode: String, status: String, getOutTime:String)
 
     suspend fun getAllInStockQrCodes(): List<QrReaderDto>
 

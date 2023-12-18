@@ -46,7 +46,9 @@ class ScanScreenViewModel @Inject constructor(
     private fun QrReaderDto.toUiState():QrCodes {
         return QrCodes(
             qrCode = this.qrCode,
-            states = this.status
+            states = this.status,
+            getInTime = this.getInTime,
+            getOutTime = this.getOutTime
         )
     }
 }

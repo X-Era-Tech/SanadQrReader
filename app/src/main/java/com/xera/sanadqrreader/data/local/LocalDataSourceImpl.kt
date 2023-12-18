@@ -7,13 +7,13 @@ class LocalDataSourceImpl @Inject constructor(
     private val sanadQrReaderDao: SanadQrReaderDao
 ) : LocalDataSource {
 
-    override suspend fun saveScannedQrCode(qrCode: String) {
-        val qrReaderDto = QrReaderDto(qrCode = qrCode, status = "in stock")
+    override suspend fun saveScannedQrCode(qrCode: String, getInTime: String) {
+        val qrReaderDto = QrReaderDto(qrCode = qrCode, status = "in stock", getInTime = getInTime)
         sanadQrReaderDao.insertQrCode(qrReaderDto)
     }
 
-    override suspend fun updateQrCodeState(qrCode: String, status: String) {
-        sanadQrReaderDao.updateQrCodeStatus(qrCode, "out of stock")
+    override suspend fun updateQrCodeState(qrCode: String, status: String, getOutTime:String) {
+        sanadQrReaderDao.updateQrCodeStatus(qrCode, "out of stock",getOutTime)
     }
 
     override suspend fun isQrCodeExists(qrCode: String): Boolean {

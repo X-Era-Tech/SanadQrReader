@@ -1,6 +1,8 @@
 package com.xera.sanadqrreader.data.repository
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import com.google.android.gms.common.moduleinstall.ModuleInstallClient
 import com.google.android.gms.common.moduleinstall.ModuleInstallRequest
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanner
@@ -10,8 +12,11 @@ import com.xera.sanadqrreader.domain.repository.ScannerRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
+import java.sql.Time
+import java.time.Instant
 import javax.inject.Inject
 
 class ScannerRepositoryImpl @Inject constructor(
@@ -21,29 +26,58 @@ class ScannerRepositoryImpl @Inject constructor(
     private val localDataSource: LocalDataSource,
 ) : ScannerRepository {
 
+    private val scanningEnabled = MutableStateFlow(true)
+
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun startScanning(): Flow<String?> {
         return callbackFlow {
+            val time = Time.from(Instant.now())
             try {
                 moduleInstallClient
-                    .installModules(moduleInstallClientRequest).addOnCompleteListener { task ->
+                    .installModules(moduleInstallClientRequest)
+                    .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
+                            // Function to start a new scan
+                            fun startNewScan() {
+                                if (scanningEnabled.value) {
+                                    scanner.startScan()
+                                        .addOnSuccessListener { barCode ->
+                                            launch(Dispatchers.IO) {
+                                                Log.i("Darkness", "startScanning: ${barCode.rawValue}")
+                                                send(barCode.rawValue)
+                                                barCode.rawValue?.let { saveScannedQrCode(it, time.toString()) }
+                                                send("Scanning completed")
+                                                startNewScan()
+                                            }
+                                        }
+                                }
+                            }
+
                             scanner.startScan()
                                 .addOnSuccessListener { barCode ->
                                     launch(Dispatchers.IO) {
                                         Log.i("Darkness", "startScanning: ${barCode.rawValue}")
                                         send(barCode.rawValue)
-                                        barCode.rawValue?.let { saveScannedQrCode(it) }
+                                        barCode.rawValue?.let { saveScannedQrCode(it, time.toString()) }
                                         send("Scanning completed")
+
+                                        startNewScan()
                                     }
                                 }
                                 .addOnFailureListener {
                                     it.printStackTrace()
+
+                                    startNewScan()
                                 }
                         } else {
                             Log.i("Darkness", "startScanning: ${task.exception}")
                             task.exception?.printStackTrace()
                         }
                     }
+                    .addOnCanceledListener {
+                        scanningEnabled.value = false
+                    }
+
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -51,16 +85,16 @@ class ScannerRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun saveScannedQrCode(qrCode: String) {
+    override suspend fun saveScannedQrCode(qrCode: String, getInTime: String) {
         if (localDataSource.isQrCodeExists(qrCode)) {
-            localDataSource.updateQrCodeState(qrCode, "out of stock")
+            localDataSource.updateQrCodeState(qrCode, "out of stock", getInTime)
         } else {
-            localDataSource.saveScannedQrCode(qrCode)
+            localDataSource.saveScannedQrCode(qrCode, getInTime)
         }
     }
 
-    override suspend fun updateQrCodeState(qrCode: String, status: String) {
-        localDataSource.updateQrCodeState(qrCode, status)
+    override suspend fun updateQrCodeState(qrCode: String, status: String, getOutTime: String) {
+        localDataSource.updateQrCodeState(qrCode, status, getOutTime)
     }
 
     override suspend fun getAllInStockQrCodes(): List<QrReaderDto> {
@@ -74,68 +108,6 @@ class ScannerRepositoryImpl @Inject constructor(
     override suspend fun getAllQrCodes(): List<QrReaderDto> {
         return localDataSource.getAllQrCodes()
     }
-    /*
-        private fun getBarCodeDetails(barcode: Barcode): String {
-            return when (barcode.valueType) {
-                Barcode.TYPE_WIFI -> {
-                    val ssid = barcode.wifi!!.ssid
-                    val password = barcode.wifi!!.password
-                    val type = barcode.wifi!!.encryptionType
-                    "ssid : $ssid, password : $password, type : $type"
-                }
 
-                Barcode.TYPE_URL -> {
-                    "url : ${barcode.url!!.url}"
-                }
 
-                Barcode.TYPE_PRODUCT -> {
-                    "productType : ${barcode.displayValue}"
-                }
-
-                Barcode.TYPE_EMAIL -> {
-                    "email : ${barcode.email}"
-                }
-
-                Barcode.TYPE_CONTACT_INFO -> {
-                    "contact : ${barcode.contactInfo}"
-                }
-
-                Barcode.TYPE_PHONE -> {
-                    "phone : ${barcode.phone}"
-                }
-
-                Barcode.TYPE_CALENDAR_EVENT -> {
-                    "calender event : ${barcode.calendarEvent}"
-                }
-
-                Barcode.TYPE_GEO -> {
-                    "geo point : ${barcode.geoPoint}"
-                }
-
-                Barcode.TYPE_ISBN -> {
-                    "isbn : ${barcode.displayValue}"
-                }
-
-                Barcode.TYPE_DRIVER_LICENSE -> {
-                    "driving license : ${barcode.driverLicense}"
-                }
-
-                Barcode.TYPE_SMS -> {
-                    "sms : ${barcode.sms}"
-                }
-
-                Barcode.TYPE_TEXT -> {
-                    "text : ${barcode.rawValue}"
-                }
-
-                Barcode.TYPE_UNKNOWN -> {
-                    "unknown : ${barcode.rawValue}"
-                }
-
-                else -> {
-                    "Couldn't determine"
-                }
-            }
-        }
-     */
 }

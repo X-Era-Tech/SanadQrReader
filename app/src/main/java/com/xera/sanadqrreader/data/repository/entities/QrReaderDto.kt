@@ -8,4 +8,6 @@ data class QrReaderDto (
     @PrimaryKey(autoGenerate = true) val id: Int? = null,
     val qrCode: String? = null,
     val status : String? = null,
+    val getInTime : String? = null,
+    val getOutTime : String? = null
     )

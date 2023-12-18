@@ -6,7 +6,7 @@ import com.xera.sanadqrreader.data.repository.entities.QrReaderDto
 
 @Database(
     entities = [QrReaderDto::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class SanadQrReaderDatabase: RoomDatabase() {

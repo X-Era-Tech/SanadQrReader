@@ -12,8 +12,9 @@ interface SanadQrReaderDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertQrCode(qrReaderDto: QrReaderDto)
 
-    @Query("UPDATE Qr_Reader_Table SET status = :status WHERE qrCode = :qrCode")
-    suspend fun updateQrCodeStatus(qrCode: String, status: String)
+    @Query("UPDATE Qr_Reader_Table SET status = :status, getOutTime = :getOutTime WHERE qrCode = :qrCode")
+    suspend fun updateQrCodeStatus(qrCode: String, status: String, getOutTime: String)
+
 
     @Query("SELECT EXISTS(SELECT 1 FROM Qr_Reader_Table WHERE qrCode = :qrCode)")
     suspend fun isQrCodeExists(qrCode: String): Boolean

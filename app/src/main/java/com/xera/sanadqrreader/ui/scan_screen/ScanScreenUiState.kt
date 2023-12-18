@@ -7,5 +7,8 @@ data class ScanScreenUiState(
 
 data class QrCodes(
     val qrCode : String?,
-    val states : String?
+    val states : String?,
+    val getInTime : String?,
+    val getOutTime : String?
+
 )

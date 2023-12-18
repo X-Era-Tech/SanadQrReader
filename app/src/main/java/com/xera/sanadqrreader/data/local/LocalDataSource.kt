@@ -5,9 +5,9 @@ import com.xera.sanadqrreader.data.repository.entities.QrReaderDto
 interface LocalDataSource {
 
 
-    suspend fun saveScannedQrCode(qrCode: String)
+    suspend fun saveScannedQrCode(qrCode: String,getInTime:String)
 
-    suspend fun updateQrCodeState(qrCode: String, status: String)
+    suspend fun updateQrCodeState(qrCode: String, status: String, getOutTime:String)
 
     suspend fun isQrCodeExists(qrCode: String): Boolean
 
