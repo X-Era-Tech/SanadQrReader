@@ -1,19 +1,36 @@
 package com.xera.sanadqrreader.data.local
 
-import com.xera.sanadqrreader.data.repository.entities.QrReaderDto
+import com.xera.sanadqrreader.data.repository.entities.InStockProducts
+import com.xera.sanadqrreader.data.repository.entities.OutStockProducts
+import com.xera.sanadqrreader.data.repository.entities.ProductHistory
 
 interface LocalDataSource {
 
+    suspend fun saveInStockProduct(qrCode: String,getInTime:String, to: String, from: String,status: String,getOutTime: String)
 
-    suspend fun saveScannedQrCode(qrCode: String,getInTime:String)
+    suspend fun updateProductStatus(qrCode: String, getOutTime: String)
 
-    suspend fun updateQrCodeState(qrCode: String, status: String, getOutTime:String)
+    suspend fun isProductInStock(qrCode: String): Boolean
 
-    suspend fun isQrCodeExists(qrCode: String): Boolean
+    suspend fun getAllInStockProducts(): List<InStockProducts>
 
-    suspend fun getAllInStockQrCodes(): List<QrReaderDto>
+    suspend fun saveOutStockProduct(qrCode: String,getOutTime: String, to: String, from: String,status: String,getInTime: String)
 
-    suspend fun getAllOutOfStockQrCodes(): List<QrReaderDto>
+    suspend fun isProductOutStock(qrCode: String): Boolean
 
-    suspend fun getAllQrCodes(): List<QrReaderDto>
+    suspend fun getAllOutStockProducts(): List<OutStockProducts>
+
+    suspend fun deleteInStockProduct(qrCode: String)
+
+    suspend fun deleteOutStockProduct(qrCode: String)
+
+    suspend fun getInTime(qrCode: String): String
+
+    suspend fun getOutTime(qrCode: String): String
+
+
+    suspend fun saveProductHistory(qrCode: String, getInTime: String?, getOutTime: String?, to: String, from: String, status: String)
+
+    suspend fun getProductHistory(qrCode: String): List<ProductHistory>
+
 }

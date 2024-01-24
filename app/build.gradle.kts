@@ -68,6 +68,8 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+    implementation ("androidx.navigation:navigation-compose:2.5.3")
+
 
     // CameraX
     implementation ("androidx.camera:camera-camera2:1.3.1")
@@ -96,5 +98,9 @@ dependencies {
     implementation("androidx.room:room-ktx:$room_version")
     //gson
     implementation("com.google.code.gson:gson:2.10.1")
+
+    //excel
+    implementation("org.apache.poi:poi:5.2.3")
+    implementation("org.apache.poi:poi-ooxml:5.2.3")
 
 }

@@ -4,28 +4,51 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.xera.sanadqrreader.data.repository.entities.QrReaderDto
+import com.xera.sanadqrreader.data.repository.entities.InStockProducts
+import com.xera.sanadqrreader.data.repository.entities.OutStockProducts
+import com.xera.sanadqrreader.data.repository.entities.ProductHistory
 
 @Dao
 interface SanadQrReaderDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertQrCode(qrReaderDto: QrReaderDto)
+    suspend fun insertInStockProducts(inStockProducts: InStockProducts)
 
-    @Query("UPDATE Qr_Reader_Table SET status = :status, getOutTime = :getOutTime WHERE qrCode = :qrCode")
-    suspend fun updateQrCodeStatus(qrCode: String, status: String, getOutTime: String)
+    @Query("UPDATE in_stock_products SET getOutTime = :getOutDate WHERE qrCode = :qrCode")
+    suspend fun updateProductGetOutDate(qrCode: String, getOutDate: String)
 
+    @Query("SELECT EXISTS(SELECT 1 FROM in_stock_products WHERE qrCode = :qrCode)")
+    suspend fun isProductInStock(qrCode: String): Boolean
 
-    @Query("SELECT EXISTS(SELECT 1 FROM Qr_Reader_Table WHERE qrCode = :qrCode)")
-    suspend fun isQrCodeExists(qrCode: String): Boolean
+    @Query("SELECT * FROM in_stock_products")
+    suspend fun getAllInStockProducts(): List<InStockProducts>
 
-    @Query("SELECT * FROM Qr_Reader_Table WHERE status = 'in stock'")
-    suspend fun getAllInStockQrCodes(): List<QrReaderDto>
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertOutStockProducts(outStockProducts: OutStockProducts)
 
-    @Query("SELECT * FROM Qr_Reader_Table WHERE status = 'out of stock'")
-    suspend fun getAllOutOfStockQrCodes(): List<QrReaderDto>
+    @Query("SELECT * FROM Out_Stock_Table")
+    suspend fun getAllOutStockProducts(): List<OutStockProducts>
 
-    @Query("SELECT * FROM Qr_Reader_Table")
-    suspend fun getAllQrCodes(): List<QrReaderDto>
+    @Query("SELECT EXISTS(SELECT 1 FROM out_stock_table WHERE qrCode = :qrCode)")
+    suspend fun isProductOutStock(qrCode: String): Boolean
+
+    @Query("DELETE FROM in_stock_products WHERE qrCode = :qrCode")
+    suspend fun deleteInStockProduct(qrCode: String)
+
+    @Query("DELETE FROM out_stock_table WHERE qrCode = :qrCode")
+    suspend fun deleteOutStockProduct(qrCode: String)
+
+    @Query("SELECT getInTime FROM in_stock_products WHERE qrCode = :qrCode")
+    suspend fun getInTimeForProduct(qrCode: String): String
+
+    @Query("SELECT getOutTime FROM out_stock_table WHERE qrCode = :qrCode")
+    suspend fun getOutTimeForProduct(qrCode: String): String
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertProductHistory(productHistory: ProductHistory)
+
+    @Query("SELECT * FROM product_history WHERE qrCode = :qrCode ORDER BY id DESC")
+    suspend fun getProductHistory(qrCode: String): List<ProductHistory>
+
 
 }
