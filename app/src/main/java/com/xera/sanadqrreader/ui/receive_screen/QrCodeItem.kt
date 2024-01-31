@@ -1,9 +1,10 @@
-package com.xera.sanadqrreader.ui.scan_screen
+package com.xera.sanadqrreader.ui.receive_screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -19,11 +20,12 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun QrCodeItem(
-    state: QrCodes
+    state: QrCodes,
+    onMoreClicked: (String) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
 
-    val statusBoxColor = if (state.states == "in stock") Color(0xFF4CAF50) else Color.Red
+    val statusBoxColor = if (state.states == "in") Color(0xFF4CAF50) else Color.Red
 
     Box(
         modifier = Modifier
@@ -61,22 +63,31 @@ fun QrCodeItem(
 
             if (expanded) {
                 Text(text = "Get In Time: ${state.getInTime}")
+                Text(text = "From: ${state.from}")
                 Text(text = "Get Out Time: ${state.getOutTime}")
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    Button(onClick = { state.qrCode?.let { onMoreClicked(it) } }) {
+                        Text("more")
+                    }
+                }
             }
         }
     }
 }
 
-
 @Preview
 @Composable
-fun QrCodeItemPreview(){
+fun QrCodeItemPreview() {
     QrCodeItem(
         state = QrCodes(
             qrCode = "123456789",
             states = "In stock",
             "",
+            "",
             ""
         )
-    )
+    ) {}
 }

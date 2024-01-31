@@ -3,8 +3,11 @@ package com.xera.sanadqrreader.domain.usecases
 import com.xera.sanadqrreader.domain.repository.ScannerRepository
 import javax.inject.Inject
 
-class GetAllOutOfStockQrCodes @Inject constructor(
+class GetOutTime @Inject constructor(
     private val scannerRepository: ScannerRepository
-){
-    suspend operator fun invoke() = scannerRepository.getAllOutOfStockQrCodes()
+)  {
+
+    suspend operator fun invoke(qrCode: String): String {
+        return scannerRepository.getOutTimeForProduct(qrCode)
+    }
 }
