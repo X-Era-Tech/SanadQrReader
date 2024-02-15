@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "Out_Stock_Table")
-data class OutStockProducts(
+data class OutStockProductsDto(
     @PrimaryKey val qrCode: String,
     val getOutTime: String? = null,
     val getInTime : String? = null,

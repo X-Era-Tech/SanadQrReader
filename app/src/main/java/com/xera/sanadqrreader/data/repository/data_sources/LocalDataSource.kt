@@ -1,8 +1,8 @@
-package com.xera.sanadqrreader.data.local
+package com.xera.sanadqrreader.data.repository.data_sources
 
-import com.xera.sanadqrreader.data.repository.entities.InStockProducts
-import com.xera.sanadqrreader.data.repository.entities.OutStockProducts
-import com.xera.sanadqrreader.data.repository.entities.ProductHistory
+import com.xera.sanadqrreader.data.repository.entities.InStockProductsDto
+import com.xera.sanadqrreader.data.repository.entities.OutStockProductsDto
+import com.xera.sanadqrreader.data.repository.entities.ProductHistoryDto
 
 interface LocalDataSource {
 
@@ -12,13 +12,13 @@ interface LocalDataSource {
 
     suspend fun isProductInStock(qrCode: String): Boolean
 
-    suspend fun getAllInStockProducts(): List<InStockProducts>
+    suspend fun getAllInStockProducts(): List<InStockProductsDto>
 
     suspend fun saveOutStockProduct(qrCode: String,getOutTime: String, to: String, from: String,status: String,getInTime: String)
 
     suspend fun isProductOutStock(qrCode: String): Boolean
 
-    suspend fun getAllOutStockProducts(): List<OutStockProducts>
+    suspend fun getAllOutStockProducts(): List<OutStockProductsDto>
 
     suspend fun deleteInStockProduct(qrCode: String)
 
@@ -31,6 +31,6 @@ interface LocalDataSource {
 
     suspend fun saveProductHistory(qrCode: String, getInTime: String?, getOutTime: String?, to: String, from: String, status: String)
 
-    suspend fun getProductHistory(qrCode: String): List<ProductHistory>
+    suspend fun getProductHistory(qrCode: String): List<ProductHistoryDto>
 
 }

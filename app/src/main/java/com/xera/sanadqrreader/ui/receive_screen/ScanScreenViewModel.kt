@@ -2,7 +2,7 @@ package com.xera.sanadqrreader.ui.receive_screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.xera.sanadqrreader.data.repository.entities.InStockProducts
+import com.xera.sanadqrreader.domain.models.InStockEntity
 import com.xera.sanadqrreader.domain.usecases.GetAllInStockProducts
 import com.xera.sanadqrreader.domain.usecases.GetScannerForInStockProductsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -57,7 +57,7 @@ class ScanScreenViewModel @Inject constructor(
         }
     }
 
-    private fun InStockProducts.toUiState(): QrCodes {
+    private fun InStockEntity.toUiState(): QrCodes {
         return QrCodes(
             qrCode = this.qrCode,
             from = this.from,

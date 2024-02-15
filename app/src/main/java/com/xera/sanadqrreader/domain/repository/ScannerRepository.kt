@@ -1,8 +1,9 @@
 package com.xera.sanadqrreader.domain.repository
 
-import com.xera.sanadqrreader.data.repository.entities.InStockProducts
-import com.xera.sanadqrreader.data.repository.entities.OutStockProducts
-import com.xera.sanadqrreader.data.repository.entities.ProductHistory
+import com.xera.sanadqrreader.domain.models.AuthEntity
+import com.xera.sanadqrreader.domain.models.InStockEntity
+import com.xera.sanadqrreader.domain.models.OutStockProductEntity
+import com.xera.sanadqrreader.domain.models.ProductHistoryEntity
 import kotlinx.coroutines.flow.Flow
 
 interface ScannerRepository {
@@ -22,13 +23,13 @@ interface ScannerRepository {
         status: String
     )
 
-    suspend fun updateProductStatus(qrCode: String, getOutTime: String)
+    suspend fun updateProductStatusLocal(qrCode: String, getOutTime: String)
 
-    suspend fun getAllInStockProduct(): List<InStockProducts>
+    suspend fun getAllInStockProductLocal(): List<InStockEntity>
 
-    suspend fun getAllOutOfStockProducts(): List<OutStockProducts>
+    suspend fun getAllOutOfStockProductsLocal(): List<OutStockProductEntity>
 
-    suspend fun saveOutStockProduct(
+    suspend fun saveOutStockProductLocal(
         qrCode: String,
         getOutTime: String,
         to: String,
@@ -37,19 +38,53 @@ interface ScannerRepository {
         getInTime: String
     )
 
-    suspend fun deleteInStockProduct(qrCode: String)
+    suspend fun deleteInStockProductLocal(qrCode: String)
 
-    suspend fun isProductInStock(qrCode: String): Boolean
+    suspend fun isProductInStockLocal(qrCode: String): Boolean
 
-    suspend fun isProductOutStock(qrCode: String): Boolean
+    suspend fun isProductOutStockLocal(qrCode: String): Boolean
 
-    suspend fun deleteOutStockProduct(qrCode: String)
+    suspend fun deleteOutStockProductLocal(qrCode: String)
 
-    suspend fun getInTimeForProduct(qrCode: String): String
+    suspend fun getInTimeForProductLocal(qrCode: String): String
 
-    suspend fun getOutTimeForProduct(qrCode: String): String
+    suspend fun getOutTimeForProductLocal(qrCode: String): String
 
-    suspend fun getProductHistory(qrCode: String): List<ProductHistory>
+    suspend fun getProductHistoryLocal(qrCode: String): List<ProductHistoryEntity>
 
-    suspend fun insertProductHistory(qrCode: String, getInTime: String, getOutTime: String, to: String, from: String, status: String)
+    suspend fun insertProductHistoryLocal(qrCode: String, getInTime: String, getOutTime: String, to: String, from: String, status: String)
+
+    suspend fun login(email: String, password: String): AuthEntity
+
+    suspend fun register(email: String,name:String, password: String): AuthEntity
+
+    suspend fun addProductInStockRemote(inStockEntity: InStockEntity)
+
+    suspend fun addProductOutStockRemote(outStockProductEntity: OutStockProductEntity)
+
+    suspend fun addProductHistoryRemote(productHistoryEntity: ProductHistoryEntity)
+
+    suspend fun getAllInStockProductRemote(): List<InStockEntity>
+
+    suspend fun getAllOutOfStockProductsRemote(): List<OutStockProductEntity>
+
+    suspend fun getAllProductHistoryRemote(): List<ProductHistoryEntity>
+
+    suspend fun updateInStockProductRemote(inStockEntity: InStockEntity)
+
+    suspend fun updateOutStockProductRemote(outStockProductEntity: OutStockProductEntity)
+
+    suspend fun updateProductHistoryRemote(productHistoryEntity: ProductHistoryEntity)
+
+    suspend fun deleteInStockProductRemote(qrCode: String)
+
+    suspend fun deleteOutStockProductRemote(qrCode: String)
+
+    suspend fun deleteProductHistoryRemote(id: Int)
+
+    suspend fun saveUserToken(token: String)
+
+    suspend fun getUserToken(): String?
+
+
 }

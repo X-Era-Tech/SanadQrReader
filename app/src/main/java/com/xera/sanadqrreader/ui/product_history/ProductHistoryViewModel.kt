@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.xera.sanadqrreader.data.repository.entities.ProductHistory
+import com.xera.sanadqrreader.domain.models.ProductHistoryEntity
 import com.xera.sanadqrreader.domain.usecases.GetAllProductHistoryUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,7 +37,7 @@ class ProductHistoryViewModel @Inject constructor(
     }
 
 
-    private fun ProductHistory.toUiState(): History {
+    private fun ProductHistoryEntity.toUiState(): History {
         return History(
             qrCode = this.qrCode,
             status = this.status,

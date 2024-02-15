@@ -2,14 +2,14 @@ package com.xera.sanadqrreader.data.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.xera.sanadqrreader.data.repository.entities.InStockProducts
-import com.xera.sanadqrreader.data.repository.entities.OutStockProducts
-import com.xera.sanadqrreader.data.repository.entities.ProductHistory
+import com.xera.sanadqrreader.data.repository.entities.InStockProductsDto
+import com.xera.sanadqrreader.data.repository.entities.OutStockProductsDto
+import com.xera.sanadqrreader.data.repository.entities.ProductHistoryDto
 
 @Database(
-    entities = [InStockProducts::class,
-        OutStockProducts::class,
-        ProductHistory::class
+    entities = [InStockProductsDto::class,
+        OutStockProductsDto::class,
+        ProductHistoryDto::class
     ],
     version = 3,
     exportSchema = false

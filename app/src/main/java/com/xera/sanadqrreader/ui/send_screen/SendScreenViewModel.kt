@@ -2,7 +2,7 @@ package com.xera.sanadqrreader.ui.send_screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.xera.sanadqrreader.data.repository.entities.OutStockProducts
+import com.xera.sanadqrreader.domain.models.OutStockProductEntity
 import com.xera.sanadqrreader.domain.usecases.GetAllOutOfStockProducts
 import com.xera.sanadqrreader.domain.usecases.GetScannerForOutOfStockProductsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -54,7 +54,7 @@ class SendScreenViewModel @Inject constructor(
 
 
 
-    private fun OutStockProducts.toUiState(): OutProductsQrCode {
+    private fun OutStockProductEntity.toUiState(): OutProductsQrCode {
         return OutProductsQrCode(
             qrCode = this.qrCode,
             to = this.to,
