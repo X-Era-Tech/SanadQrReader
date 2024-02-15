@@ -8,6 +8,6 @@ class GetOutTime @Inject constructor(
 )  {
 
     suspend operator fun invoke(qrCode: String): String {
-        return scannerRepository.getOutTimeForProduct(qrCode)
+        return scannerRepository.getOutTimeForProductLocal(qrCode)
     }
 }

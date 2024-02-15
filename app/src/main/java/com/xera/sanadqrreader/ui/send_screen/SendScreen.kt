@@ -51,7 +51,6 @@ private fun SendScreenContent(
 ) {
     val toWarehouse = listOf("Giza", "Cairo", "india")
     var enable by remember { mutableStateOf(false) }
-
     Column(
         modifier = Modifier
             .fillMaxSize()

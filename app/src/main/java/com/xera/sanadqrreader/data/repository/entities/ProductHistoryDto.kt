@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "product_history")
-data class ProductHistory(
+data class ProductHistoryDto(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val qrCode: String,

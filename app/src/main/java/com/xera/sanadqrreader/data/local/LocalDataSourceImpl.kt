@@ -1,8 +1,9 @@
 package com.xera.sanadqrreader.data.local
 
-import com.xera.sanadqrreader.data.repository.entities.InStockProducts
-import com.xera.sanadqrreader.data.repository.entities.OutStockProducts
-import com.xera.sanadqrreader.data.repository.entities.ProductHistory
+import com.xera.sanadqrreader.data.repository.data_sources.LocalDataSource
+import com.xera.sanadqrreader.data.repository.entities.InStockProductsDto
+import com.xera.sanadqrreader.data.repository.entities.OutStockProductsDto
+import com.xera.sanadqrreader.data.repository.entities.ProductHistoryDto
 import javax.inject.Inject
 
 class LocalDataSourceImpl @Inject constructor(
@@ -11,7 +12,7 @@ class LocalDataSourceImpl @Inject constructor(
 
     override suspend fun saveInStockProduct(qrCode: String, getInTime: String,to: String,from: String,status: String,getOutTime: String) {
         sanadQrReaderDao.insertInStockProducts(
-            InStockProducts(
+            InStockProductsDto(
                 qrCode = qrCode,
                 getInTime = getInTime,
                 to = to,
@@ -30,13 +31,13 @@ class LocalDataSourceImpl @Inject constructor(
         return sanadQrReaderDao.isProductInStock(qrCode)
     }
 
-    override suspend fun getAllInStockProducts(): List<InStockProducts> {
+    override suspend fun getAllInStockProducts(): List<InStockProductsDto> {
         return sanadQrReaderDao.getAllInStockProducts()
     }
 
     override suspend fun saveOutStockProduct(qrCode: String, getOutTime: String,to: String, from: String,status: String,getInTime: String) {
         sanadQrReaderDao.insertOutStockProducts(
-            OutStockProducts(
+            OutStockProductsDto(
                 qrCode = qrCode,
                 getOutTime = getOutTime,
                 to = to,
@@ -51,7 +52,7 @@ class LocalDataSourceImpl @Inject constructor(
         return sanadQrReaderDao.isProductOutStock(qrCode)
     }
 
-    override suspend fun getAllOutStockProducts(): List<OutStockProducts> {
+    override suspend fun getAllOutStockProducts(): List<OutStockProductsDto> {
         return sanadQrReaderDao.getAllOutStockProducts()
     }
 
@@ -80,7 +81,7 @@ class LocalDataSourceImpl @Inject constructor(
         status: String
     ) {
         sanadQrReaderDao.insertProductHistory(
-            ProductHistory(
+            ProductHistoryDto(
                 qrCode = qrCode,
                 getInTime = getInTime,
                 getOutTime = getOutTime,
@@ -91,7 +92,7 @@ class LocalDataSourceImpl @Inject constructor(
         )
     }
 
-    override suspend fun getProductHistory(qrCode: String): List<ProductHistory> {
+    override suspend fun getProductHistory(qrCode: String): List<ProductHistoryDto> {
         return sanadQrReaderDao.getProductHistory(qrCode)
     }
 }
