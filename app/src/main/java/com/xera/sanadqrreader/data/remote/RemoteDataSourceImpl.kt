@@ -94,11 +94,9 @@ class RemoteDataSourceImpl @Inject constructor(
                 else -> IOException()
             }
         } catch (e: ConnectException) {
-            throw NetworkException.NoInternetException()
+            return NetworkException.NoInternetException().message.toString() as T
         } catch (e: NetworkException.UnAuthorizedException) {
-            // Handle the exception here. For example, you can show a user-friendly error message.
-            // You can also return a default value or null, depending on your use case.
-            return null as T
+            return e.message.toString() as T
         }
     }
 }

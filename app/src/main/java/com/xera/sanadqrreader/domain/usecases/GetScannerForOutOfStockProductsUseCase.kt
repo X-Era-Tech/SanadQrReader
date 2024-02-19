@@ -22,6 +22,14 @@ class GetScannerForOutOfStockProductsUseCase @Inject constructor(
                     status = "Out",
                     getOutTime = time ?: "?"
                 )
+                scannerRepository.saveOutStockProductLocal(
+                    qrCode = qrCode ?: "Not Correct",
+                    getOutTime = time ?: "?",
+                    to = toWarehouse,
+                    from = fromWarehouse,
+                    status = "Out",
+                    getInTime = getInTime
+                )
                 scannerRepository.addProductHistoryRemote(
                     ProductHistoryEntity(
                         qrCode = qrCode ?: "Not Correct",
@@ -31,14 +39,6 @@ class GetScannerForOutOfStockProductsUseCase @Inject constructor(
                         status = "Out",
                         getOutTime = time ?: "?"
                     )
-                )
-                scannerRepository.saveOutStockProductLocal(
-                    qrCode = qrCode ?: "Not Correct",
-                    getOutTime = time ?: "?",
-                    to = toWarehouse,
-                    from = fromWarehouse,
-                    status = "Out",
-                    getInTime = getInTime
                 )
                 scannerRepository.addProductOutStockRemote(
                     OutStockProductEntity(

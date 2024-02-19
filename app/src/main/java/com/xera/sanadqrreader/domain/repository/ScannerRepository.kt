@@ -14,7 +14,16 @@ interface ScannerRepository {
         from: String
     ): Flow<String?>
 
-    suspend fun saveInStockProduct(
+    suspend fun saveInStockProductRemote(
+        qrCode: String,
+        getInTime: String,
+        getOutTime: String,
+        to: String,
+        from: String,
+        status: String
+    )
+
+    suspend fun saveInStockProductLocal(
         qrCode: String,
         getInTime: String,
         getOutTime: String,
@@ -85,6 +94,8 @@ interface ScannerRepository {
     suspend fun saveUserToken(token: String)
 
     suspend fun getUserToken(): String?
+
+    suspend fun clearUserToken()
 
 
 }

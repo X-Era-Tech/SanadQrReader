@@ -5,6 +5,7 @@ data class ScanScreenUiState(
     val isLoading : Boolean = false,
     val toWarehouse : String = "Maadi",
     val fromWarehouse : String = "",
+    val error : String = ""
 )
 
 data class QrCodes(

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -47,10 +48,11 @@ private fun SendScreenContent(
     state: SendScreenUiState,
     onSendClicked: () -> Unit,
     onSelectedToChange: (String) -> Unit,
-    onMoreClicked : (String) -> Unit
+    onMoreClicked: (String) -> Unit
 ) {
     val toWarehouse = listOf("Giza", "Cairo", "india")
     var enable by remember { mutableStateOf(false) }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -81,34 +83,38 @@ private fun SendScreenContent(
                 readOnly = true
             )
         }
+
+        if (state.isLoading) {
+            CircularProgressIndicator(
+                color = Color(0xFF35C2C1),
+                strokeWidth = 2.dp,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+        }
+
         LazyColumn(
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally),
+            modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            itemsIndexed(state.details) { index ,item ->
-                OutProductItem(state = state.details[index]){
+            itemsIndexed(state.details) { index, item ->
+                OutProductItem(state = state.details[index]) {
                     item.qrCode?.let { qrCode -> onMoreClicked(qrCode) }
                 }
             }
-            item {
-                if (state.toWarehouse != "" && state.fromWarehouse != "") {
-                    enable = true
-                }
-                Button(
-                    onClick = { onSendClicked() },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    enabled = enable
-
-                ) {
-                    Text(text = "Out")
-                }
-
-            }
         }
 
+        if (state.toWarehouse != "" && state.fromWarehouse != "") {
+            enable = true
+        }
+        Button(
+            onClick = { onSendClicked() },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            enabled = enable
+        ) {
+            Text(text = "Out")
+        }
     }
 }
