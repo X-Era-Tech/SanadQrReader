@@ -9,8 +9,8 @@ class GetLoginUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(email: String, password: String) :AuthEntity{
         repository.clearUserToken()
-        val token = repository.login(email, password).message
-        repository.saveUserToken(token)
-        return repository.login(email, password)
+        val response = repository.login(email, password)
+        repository.saveUserToken(response.message)
+        return response
     }
 }

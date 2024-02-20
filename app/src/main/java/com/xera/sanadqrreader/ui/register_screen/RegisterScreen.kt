@@ -20,6 +20,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -30,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.xera.sanadqrreader.navigation.SanadQrReaderDestination
 import com.xera.sanadqrreader.ui.composables.CustomBackButton
 import com.xera.sanadqrreader.ui.composables.CustomEditText
 import com.xera.sanadqrreader.ui.login_screen.navigateToLoginScreen
@@ -65,16 +67,22 @@ private fun RegisterScreenContent(
 
     val context = LocalContext.current
     val showDialog = remember { mutableStateOf(false) }
+    val navigatedToScanScreen = rememberSaveable { mutableStateOf(false) }
+
 
     LaunchedEffect(key1 = state.isSuccess, key2 = state.error) {
         when {
             state.isSuccess -> {
-                navController.navigateToLoginScreen()
+                navigatedToScanScreen.value = true
+                navController.navigate(SanadQrReaderDestination.SCAN_SCREEN) {
+                    popUpTo(SanadQrReaderDestination.LOGIN_SCREEN) { inclusive = true }
+                }
                 Toast.makeText(context, "Registered Successfully", Toast.LENGTH_SHORT).show()
             }
 
             state.error.isNotEmpty() -> {
                 showDialog.value = true
+                Toast.makeText(context, "Try Again", Toast.LENGTH_SHORT).show()
             }
         }
     }

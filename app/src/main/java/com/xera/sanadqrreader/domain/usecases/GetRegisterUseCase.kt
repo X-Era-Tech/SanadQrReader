@@ -8,9 +8,9 @@ class GetRegisterUseCase @Inject constructor(
     private val repository: ScannerRepository
 ) {
     suspend operator fun invoke(email: String, name: String, password: String):AuthEntity{
-     val token = repository.register(email, name, password).message
-        repository.saveUserToken(token)
-        return repository.register(email, name, password)
+     val response = repository.register(email, name, password)
+        repository.saveUserToken(response.message)
+        return response
     }
 
 }

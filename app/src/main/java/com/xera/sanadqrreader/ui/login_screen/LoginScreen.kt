@@ -87,6 +87,7 @@ private fun LoginScreenContent(
             }
 
             state.error.isNotEmpty() -> {
+                Toast.makeText(context, "Check Email or Password", Toast.LENGTH_SHORT).show()
                 showDialog.value = true
             }
         }
