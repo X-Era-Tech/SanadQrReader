@@ -36,12 +36,20 @@ class SendScreenViewModel @Inject constructor(
 
     fun starScanOutProducts() {
         viewModelScope.launch {
-            getScannerForOutOfStockProductsUseCase.invoke(
-                to = _state.value.toWarehouse,
-                from = _state.value.fromWarehouse
-            ).collect { result ->
-                if (result == "Scanning completed") {
-                    getAllOutProducts()
+            try {
+                getScannerForOutOfStockProductsUseCase.invoke(
+                    to = _state.value.toWarehouse,
+                    from = _state.value.fromWarehouse
+                ).collect { result ->
+                    if (result == "Scanning completed") {
+                        getAllOutProducts()
+                    }
+                }
+            }catch (e:Exception){
+                _state.update {
+                    it.copy(
+                        error = e.message.toString() ?: "Duplicate QR code",
+                    )
                 }
             }
         }

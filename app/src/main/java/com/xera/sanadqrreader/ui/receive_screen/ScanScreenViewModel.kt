@@ -49,7 +49,7 @@ class ScanScreenViewModel @Inject constructor(
             }catch (e:Exception){
                 _state.update {
                     it.copy(
-                        error = e.message.toString()
+                        error = e.message.toString() ?: "Duplicate QR code",
                     )
                 }
             }
