@@ -1,5 +1,6 @@
 package com.xera.sanadqrreader.ui.send_screen
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xera.sanadqrreader.domain.models.OutStockProductEntity
@@ -56,7 +57,7 @@ class SendScreenViewModel @Inject constructor(
     }
 
 
-     fun getAllOutProducts() {
+     private fun getAllOutProducts() {
         viewModelScope.launch(Dispatchers.IO) {
             _state.update {
                 it.copy(isLoading = true)
@@ -82,6 +83,19 @@ class SendScreenViewModel @Inject constructor(
         }
     }
 
+    fun writeProductsToExcel(context:Context) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                getAllOutOfStockProducts.writeProductsToExcel(context,getAllOutOfStockProducts.invoke())
+            } catch (e: Exception) {
+                _state.update {
+                    it.copy(
+                        error = e.message.toString()
+                    )
+                }
+            }
+        }
+    }
 
     private fun OutStockProductEntity.toUiState(): OutProductsQrCode {
         return OutProductsQrCode(
