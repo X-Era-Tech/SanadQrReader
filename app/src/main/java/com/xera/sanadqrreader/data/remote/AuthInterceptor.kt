@@ -13,8 +13,7 @@ class AuthInterceptor @Inject constructor(
     private val sharedPreferences: SharedPreferences
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
-        val userToken = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBdXRoZW50aWNhdGlvbiBUb2tlbiIsImlzcyI6IlhlcmFTZXJ2ZXIiLCJlbWFpbCI6ImhhbmFfaGFueUB5YWhvby5jb20ifQ.GDO0M4D5tCbnyHJUlOMJ3p9JK9KYB9F8M0vc1jf_-lysqBLjdKOU0dW4xYrWEiYoHhvnVXFTfYx_YXzZEh_Ydg"
-            //sharedPreferences.getString("token",null)
+        val userToken = sharedPreferences.getString("token",null)
         val request = chain.request()
             .newBuilder()
             .cacheControl(cacheControl)

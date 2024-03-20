@@ -67,7 +67,7 @@ fun DropDownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
             modifier = Modifier
-                .width(with(LocalDensity.current) { textFieldSize.width.toDp() })
+                .width(with(LocalDensity.current) { textFieldSize.width.toDp() + 58.dp })
         ) {
             dropDownMenuList.forEach { label ->
                 DropdownMenuItem({ Text(text = label) }, onClick = {

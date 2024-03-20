@@ -113,7 +113,7 @@ class ScannerRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun saveInStockProduct(
+    override suspend fun saveInStockProductRemote(
         qrCode: String,
         getInTime: String,
         getOutTime: String,
@@ -121,9 +121,19 @@ class ScannerRepositoryImpl @Inject constructor(
         from: String,
         status: String
     ) {
-        remoteDataSource.addProductInStock(addProductInStockResource = AddProductInStockResource(qrCode, getInTime, getOutTime, to, from, status))
-        if (!localDataSource.isProductInStock(qrCode)) {
-            localDataSource.saveInStockProduct(qrCode, getInTime, to, from, "in", getOutTime)
+        remoteDataSource.addProductInStock(addProductInStockResource = AddProductInStockResource(qrCode = qrCode, getInTime = getInTime, getOutTime = getOutTime, to =  to, from =  from, status =  status))
+    }
+
+    override suspend fun saveInStockProductLocal(
+        qrCode: String,
+        getInTime: String,
+        getOutTime: String,
+        to: String,
+        from: String,
+        status: String
+    ) {
+        if (!localDataSource.isProductInStock(qrCode)){
+            localDataSource.saveInStockProduct(qrCode, getInTime, to, from, status, getOutTime)
         }
     }
 
@@ -254,6 +264,10 @@ class ScannerRepositoryImpl @Inject constructor(
 
     override suspend fun getUserToken(): String? {
        return sharedPreferenceDataSource.getUserToken()
+    }
+
+    override suspend fun clearUserToken() {
+        sharedPreferenceDataSource.clearUserToken()
     }
 
 

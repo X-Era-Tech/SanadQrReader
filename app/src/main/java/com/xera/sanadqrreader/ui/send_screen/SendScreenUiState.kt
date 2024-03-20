@@ -5,6 +5,7 @@ data class SendScreenUiState(
     val isLoading : Boolean = false,
     val toWarehouse : String = "",
     val fromWarehouse : String = "Maadi",
+    val error : String = ""
 )
 
 data class OutProductsQrCode(
