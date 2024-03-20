@@ -1,5 +1,6 @@
 package com.xera.sanadqrreader.ui.receive_screen
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xera.sanadqrreader.domain.models.InStockEntity
@@ -57,7 +58,6 @@ class ScanScreenViewModel @Inject constructor(
     }
     private fun getAllQrCodes() {
         viewModelScope.launch(Dispatchers.IO) {
-
             _state.update { it.copy(
                 isLoading = true
             ) }
@@ -79,6 +79,23 @@ class ScanScreenViewModel @Inject constructor(
             }
         }
     }
+
+    fun writeProductsToExcel(context: Context) {
+        viewModelScope.launch {
+            _state.update {
+                it.copy(
+                    isLoading = true
+                )
+            }
+            getAllQrCodes.writeProductsToExcel(context, getAllQrCodes.invoke())
+            _state.update {
+                it.copy(
+                    isLoading = false
+                )
+            }
+        }
+    }
+
 
     private fun InStockEntity.toUiState(): QrCodes {
         return QrCodes(

@@ -30,7 +30,7 @@ object BarCodeModule {
     @ViewModelScoped
     fun provideBarCodeOptions(): GmsBarcodeScannerOptions {
         return GmsBarcodeScannerOptions.Builder()
-            .setBarcodeFormats(Barcode.FORMAT_ALL_FORMATS)
+            .setBarcodeFormats(Barcode.FORMAT_CODE_39,Barcode.FORMAT_CODE_128,Barcode.FORMAT_ITF,Barcode.FORMAT_PDF417)
             .build()
     }
 

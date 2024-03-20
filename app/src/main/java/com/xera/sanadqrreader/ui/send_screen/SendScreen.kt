@@ -1,16 +1,26 @@
 package com.xera.sanadqrreader.ui.send_screen
 
+import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -39,7 +50,8 @@ fun SendScreen(
         state = state,
         onSendClicked = viewModel::starScanOutProducts,
         onSelectedToChange = viewModel::onToChanged,
-        onMoreClicked = navController::navigateToProductHistoryScreen
+        onMoreClicked = navController::navigateToProductHistoryScreen,
+        saveExcel = viewModel::writeProductsToExcel
     )
 }
 
@@ -48,9 +60,10 @@ private fun SendScreenContent(
     state: SendScreenUiState,
     onSendClicked: () -> Unit,
     onSelectedToChange: (String) -> Unit,
-    onMoreClicked: (String) -> Unit
+    onMoreClicked: (String) -> Unit,
+    saveExcel: (Context) -> Unit
 ) {
-    val toWarehouse = listOf(
+    var toWarehouse by remember { mutableStateOf( listOf(
         "Abdallah Hassan Ahmed Mohamed",
         "Abdelrahman Kamal Ahmed",
         "Ahmed Ali Nagy Monzee",
@@ -93,8 +106,10 @@ private fun SendScreenContent(
         "Soliman El Sayed Soliman Ahmed",
         "Zeyad Mahmoud Nagy Monzee"
 
-    )
+    ))}
     var enable by remember { mutableStateOf(false) }
+    var isTextFieldVisible by remember { mutableStateOf(false) }
+    var newCustomer by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -114,7 +129,12 @@ private fun SendScreenContent(
                 modifier = Modifier
                     .weight(1f)
             )
-
+            Log.i("SendScreenContent", "isAdmin: ${state.isAdmin}")
+            if (state.isAdmin) {
+                IconButton(onClick = { isTextFieldVisible = !isTextFieldVisible },modifier = Modifier.padding(8.dp)) {
+                    Icon(Icons.Filled.Add, contentDescription = "Add")
+                }
+            }
             OutlinedTextField(
                 value = state.fromWarehouse,
                 textStyle = TextStyle(color = Color.Black),
@@ -126,7 +146,23 @@ private fun SendScreenContent(
                 readOnly = true
             )
         }
+        Spacer(modifier = Modifier.padding(8.dp))
+        if (isTextFieldVisible) {
+            OutlinedTextField(
+                value = newCustomer,
+                onValueChange = { newCustomer = it },
+                label = { Text("New Customer") }
+            )
 
+            Button(onClick = {
+                toWarehouse = toWarehouse + newCustomer
+                newCustomer = ""
+                isTextFieldVisible = false
+            }) {
+                Text("Save Customer")
+            }
+        }
+        Spacer(modifier = Modifier.padding(8.dp))
         if (state.isLoading) {
             CircularProgressIndicator(
                 color = Color(0xFF35C2C1),
@@ -144,6 +180,23 @@ private fun SendScreenContent(
                 OutProductItem(state = state.details[index]) {
                     item.qrCode?.let { qrCode -> onMoreClicked(qrCode) }
                 }
+            }
+        }
+
+        Box(modifier = Modifier.align(Alignment.End)) {
+            FloatingActionButton(
+                onClick = {},
+                content = {
+                    Icon(Icons.Filled.Share, contentDescription = "Save Workbook")
+                    saveExcel(LocalContext.current)
+                }
+            )
+            if (state.isLoading) {
+                CircularProgressIndicator(
+                    color = Color.White,
+                    strokeWidth = 2.dp,
+                    modifier = Modifier.align(Alignment.Center)
+                )
             }
         }
 

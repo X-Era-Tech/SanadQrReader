@@ -226,5 +226,4 @@ private fun LoginScreenContent(
             )
         }
     }
-
 }
