@@ -129,12 +129,12 @@ private fun SendScreenContent(
                 modifier = Modifier
                     .weight(1f)
             )
-            Log.i("SendScreenContent", "isAdmin: ${state.isAdmin}")
-            if (state.isAdmin) {
-                IconButton(onClick = { isTextFieldVisible = !isTextFieldVisible },modifier = Modifier.padding(8.dp)) {
-                    Icon(Icons.Filled.Add, contentDescription = "Add")
-                }
-            }
+//            Log.i("SendScreenContent", "isAdmin: ${state.isAdmin}")
+//            if (state.isAdmin) {
+//                IconButton(onClick = { isTextFieldVisible = !isTextFieldVisible },modifier = Modifier.padding(8.dp)) {
+//                    Icon(Icons.Filled.Add, contentDescription = "Add")
+//                }
+//            }
             OutlinedTextField(
                 value = state.fromWarehouse,
                 textStyle = TextStyle(color = Color.Black),
